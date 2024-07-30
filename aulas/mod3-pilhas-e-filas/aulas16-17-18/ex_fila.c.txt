@@ -1,0 +1,117 @@
+#include<stdlib.h>
+#include<stdio.h>
+//#include<string.h>
+
+#define  MAX  6
+
+typedef int elem;
+
+struct fila {
+    int ini;        // índice do primeiro elemento da fila
+    int fim;        // índice do último elemento da fila
+    int tam;        // número de elementos da fila
+    elem itens[MAX];  // elementos da pilha
+};
+
+typedef struct fila Fila;
+
+Fila* criar()
+{
+    Fila *fi;
+
+    fi = (Fila *) malloc(sizeof(Fila));
+    if (fi != NULL) {
+        fi->ini = 0;
+        fi->fim = 0;
+        fi->tam = 0;
+    }
+
+    return fi;
+}
+
+void destruir(Fila *F)
+{
+    free(F);
+}
+
+int vazia(Fila *F)
+{
+    if (F->tam == 0) return 1;   // true
+    else return 0;  // false
+
+    // alternativa:
+    //return (F->tam == 0);
+}
+
+int cheia(Fila *F)
+{
+    return (F->tam == MAX);
+}
+
+// insere na fila (fim)
+void enqueue(Fila *F, elem X)
+{
+    //int pos;
+    if (!cheia(F)) {
+        //pos = F->fim
+        //F->itens[pos] = X;
+        F->itens[F->fim] = X;
+        F->fim = (F->fim + 1) % MAX;
+        (F->tam)++;
+    }
+}
+
+// remove um elemento (primeiro)
+elem dequeue(Fila *F)
+{
+    elem x;
+    
+    if (!vazia(F)) {
+        x = F->itens[F->ini];
+        F->ini = (F->ini + 1) % MAX;
+        (F->tam)--;
+        
+        return x;
+    }
+}
+
+int main()
+{
+    int n, i;
+    elem e;
+
+    Fila *f;
+
+    f = criar();
+    if (f == NULL) {
+        printf("ERRO: não foi possivel criar a fila\n");
+        exit(1);
+    }
+
+    //scanf("%d", &n);
+    n = 6;
+    for (i = 0; i < n; i++) {
+        e = (i+1) * 10;
+        enqueue(f, e);
+    }
+
+    e = dequeue(f);
+    //printf("%d ", e);
+    
+    enqueue(f, 70);
+    
+    for (i = 0; i < n; i++) {
+        printf("%d ", f->itens[i]);
+    }
+    
+    printf("\n");
+    while (!vazia(f)) {
+        e = dequeue(f);
+        printf("%d ", e);
+    }
+    printf("\n");
+
+    destruir(f);
+    
+    return 0;
+}

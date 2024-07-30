@@ -1,0 +1,120 @@
+#include<stdlib.h>
+#include<stdio.h>
+
+/*
+ *  cab --> | 4 | prox |--> | 3 | prox |--> NULL
+ */
+
+struct no {
+    int dado;
+    struct no *prox;
+};
+
+struct lista {
+    struct no *cab;
+    struct no *fim;
+};
+
+typedef struct no No;
+typedef struct lista Lista;
+
+Lista* cria()
+{
+    Lista *li;
+
+    li = (Lista *) malloc(sizeof(Lista));
+    // se li for NULL, a alocacao deu erro
+
+    li->cab = NULL;
+
+    return li;
+}
+
+void insere_ini(Lista *li, int valor)
+{
+    No *elem;
+    
+    elem = (No *) malloc(sizeof(No));
+    elem->dado = valor;
+    elem->prox = li->cab;
+
+    li->cab = elem;
+}
+
+void insere_fim1(Lista *li, int valor)
+{
+    No *elem;
+
+    elem = (No *) malloc(sizeof(No));
+    elem->dado = valor;
+    elem->prox = NULL;
+
+    No *p = NULL;
+    p = li->cab;
+    while (p->prox != NULL) p = p->prox;
+
+    p->prox = elem;
+
+}
+
+void insere_fim(Lista *li, int valor)
+{
+    No *elem;
+    
+    elem = (No *) malloc(sizeof(No));
+    elem->dado = valor;
+    elem->prox = NULL;
+
+    li->fim = elem;
+}
+
+int main()
+{
+    Lista *li;
+    No *p = NULL;
+
+    li = cria();
+
+    insere_ini(li, 3);
+    insere_ini(li, 4);
+
+    // apontando para a primeira pos da lista
+    p = li->cab;
+    while (p != NULL) {
+        printf("%d\n", p->dado);
+        // avancando para a prox posicao
+        p = p->prox;
+    }
+
+    p = li->cab;
+    while (p != NULL) {
+        li->cab = p->prox;
+        free(p);
+        p = li->cab;
+    }
+    free(li);
+
+
+    /*elem = (No *) malloc(sizeof(No));
+    elem->dado = 3;
+    elem->prox = NULL;
+
+    li = (Lista *) malloc(sizeof(Lista));
+    li->cab = elem;
+
+    elem1 = (No *) malloc(sizeof(No));
+    elem1->dado = 4;
+
+    elem1->prox = li->cab;
+    li->cab = elem1;
+    */
+    //elem->prox = elem1;
+
+
+    
+    
+    
+    
+
+    return 0;
+}

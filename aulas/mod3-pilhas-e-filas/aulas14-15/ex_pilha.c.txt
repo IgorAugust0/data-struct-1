@@ -1,0 +1,105 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
+
+#define N 100
+
+typedef char elem;
+
+struct pilha {
+    int topo;       // indice do topo da pilha
+    elem itens[N];  // elementos da pilha
+};
+
+typedef struct pilha Pilha;
+
+Pilha* criar()
+{
+    Pilha *pi;
+
+    pi = (Pilha *) malloc(sizeof(Pilha));
+    if (pi != NULL) pi->topo=-1;
+
+    return pi;
+}
+
+void destruir(Pilha *P)
+{
+    free(P);
+}
+
+int vazia(Pilha *P)
+{
+    if (P->topo == -1)
+        return 1;   // true
+    else return 0;  // false
+}
+
+void empilha(Pilha *P, elem X)
+{
+    (P->topo)++;
+    P->itens[P->topo] = X;
+}
+
+// desempilha sem return
+void desempilha_sr(Pilha *P, elem *X)
+{
+    *X = P->itens[P->topo];
+    (P->topo)--;
+}
+
+elem desempilha(Pilha *P)
+{
+    int t = P->topo; 
+    (P->topo)--;
+    return P->itens[t];
+}
+
+/*
+ * Parte dessa função foi adaptada das aulas
+ * do professor Rafael C. S. Schouery (Unicamp)
+ * */
+int bemFormada(char str[]) 
+{
+    int i, ok;
+    char par;
+    Pilha *P;
+
+    P = criar();
+    if (P == NULL) return -1;
+
+    ok = 1;
+    for (i = 0; ok && str[i] != '\0'; i++) {
+        if (str[i] == '[' || str[i] == '(') {
+            empilha(P, str[i]); // push()
+        } else {
+            par = desempilha(P); // pop()
+            // desempilha_sr(P, &par);
+            if (str[i] == ']' && par != '[')
+                ok = 0; // return 0;
+            if (str[i] == ')' && par != '(')
+                ok = 0; // return 0;
+        }
+    }
+    if (!vazia(P)) ok = 0;
+
+    destruir(P);
+
+    return ok;
+}
+
+int main()
+{
+    char exp[N];
+
+    scanf("%s", exp);
+
+    //printf("%d\n", bemFormada(exp));
+    if (bemFormada(exp) == 1) {
+        printf("Expressao bem formada\n");
+    } else {
+        printf("Expressao mal formada\n");
+    }
+
+    return 0;
+}
